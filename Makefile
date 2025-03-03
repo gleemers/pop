@@ -15,6 +15,10 @@ clean:
 	mix clean
 	rm -f pop
 	rm -f *.beam
+	rm -f src/pop_lexer.erl
+	rm -f src/pop_parser.erl
+	rm -rf ebin/*
+	rm -rf _build
 
 test: build $(EXAMPLES_DIR)
 	./pop examples/hello.pop

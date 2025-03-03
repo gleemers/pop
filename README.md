@@ -1,5 +1,7 @@
 # Pop Language
 
+> This is a toy!
+
 Pop is a simple functional programming language that compiles to BEAM (Erlang Virtual Machine) bytecode.
 
 ## Features
