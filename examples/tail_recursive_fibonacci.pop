@@ -1,0 +1,32 @@
+fun fibonacci_tail(n) {
+    fibonacci_helper(n, 0, 1);
+}
+
+fun fibonacci_helper(n, a, b) {
+    if (n == 0) {
+        a;
+    } else {
+        fibonacci_helper(n - 1, b, a + b);
+    }
+}
+
+fun print_fibonacci_sequence(n, limit) {
+    if (n == 0) {
+        result = fibonacci_tail(n);
+        io_format("fibonacci(~p) = ~p\n", n, result);
+        print_fibonacci_sequence(n + 1, limit);
+    } else {
+        result = fibonacci_tail(n);
+        if (result <= limit) {
+            io_format("fibonacci(~p) = ~p\n", n, result);
+            print_fibonacci_sequence(n + 1, limit);
+        } else {
+            io_format("Reached limit: ~p\n", limit);
+        }
+    }
+}
+
+fun main() {
+    io_format("Tail-recursive Fibonacci sequence up to 1000:\n");
+    print_fibonacci_sequence(0, 1000);
+}

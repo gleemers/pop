@@ -1,0 +1,13 @@
+fun count(n) {
+    if (n == 1000000) {
+        1000000;
+    } else {
+        io_format("~p\n", n);
+        n + count(n + 1);
+    }
+}
+
+fun main() {
+    io_format("Counting to the moon:\n");
+    count(0);
+}

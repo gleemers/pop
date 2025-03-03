@@ -1,0 +1,32 @@
+fun fibonacci(n) {
+    if (n == 0) {
+        0;
+    } else {
+        if (n == 1) {
+            1;
+        } else {
+            fibonacci(n - 1) + fibonacci(n - 2);
+        }
+    }
+}
+
+fun print_fibonacci_sequence(n, limit) {
+    if (n == 0) {
+        result = fibonacci(n);
+        io_format("fibonacci(~p) = ~p\n", n, result);
+        print_fibonacci_sequence(n + 1, limit);
+    } else {
+        result = fibonacci(n);
+        if (result <= limit) {
+            io_format("fibonacci(~p) = ~p\n", n, result);
+            print_fibonacci_sequence(n + 1, limit);
+        } else {
+            io_format("Reached limit: ~p\n", limit);
+        }
+    }
+}
+
+fun main() {
+    io_format("Fibonacci sequence up to 100:\n");
+    print_fibonacci_sequence(0, 100);
+}

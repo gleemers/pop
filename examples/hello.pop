@@ -1,0 +1,7 @@
+fun greet(name) {
+    io_format("Hello, ~p!~n", name);
+}
+
+fun main() {
+    greet("World");
+}

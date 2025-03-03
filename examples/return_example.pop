@@ -1,0 +1,55 @@
+fun is_even(n) {
+    if (n % 2 == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+fun find_max(a, b) {
+    if (a > b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+
+fun factorial(n) {
+    if (n == 0) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+fun early_return_example(n) {
+    if (n < 0) {
+        io_format("Error: Cannot process negative numbers\n");
+        return;
+    }
+    
+    if (n == 0) {
+        io_format("Got zero\n");
+        return 0;
+    }
+    
+    result = n * 2;
+    io_format("Processed: ~p\n", result);
+    return result;
+}
+
+fun main() {
+    io_format("Testing return statements:\n\n");
+    
+    io_format("is_even(4): ~p\n", is_even(4));
+    io_format("is_even(5): ~p\n", is_even(5));
+    
+    io_format("\nfind_max(10, 5): ~p\n", find_max(10, 5));
+    io_format("find_max(3, 7): ~p\n", find_max(3, 7));
+    
+    io_format("\nfactorial(5): ~p\n", factorial(5));
+    
+    io_format("\nTesting early returns:\n");
+    early_return_example(-1);
+    early_return_example(0);
+    early_return_example(5);
+}
