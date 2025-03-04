@@ -180,6 +180,9 @@ expr_to_beam({assign, Name, Value}, Line) ->
 expr_to_beam({call, print, Args}, Line) ->
     % Special handling for print calls
     case Args of
+        [] ->
+            % No arguments, do nothing
+            {atom, Line, ok};
         [Value] ->
             case Value of
                 Value when is_list(Value) ->
@@ -193,6 +196,21 @@ expr_to_beam({call, print, Args}, Line) ->
                      {remote, Line, {atom, Line, io}, {atom, Line, format}},
                      [{string, Line, "~p"}, {cons, Line, expr_to_beam(Value, Line), {nil, Line}}]}
             end;
+        [Value1, Value2] ->
+            % Format two arguments with a space between them
+            {call, Line,
+             {remote, Line, {atom, Line, io}, {atom, Line, format}},
+             [{string, Line, "~p ~p"}, 
+              {cons, Line, expr_to_beam(Value1, Line),
+               {cons, Line, expr_to_beam(Value2, Line), {nil, Line}}}]};
+        [Value1, Value2, Value3] ->
+            % Format three arguments with spaces between them
+            {call, Line,
+             {remote, Line, {atom, Line, io}, {atom, Line, format}},
+             [{string, Line, "~p ~p ~p"}, 
+              {cons, Line, expr_to_beam(Value1, Line),
+               {cons, Line, expr_to_beam(Value2, Line),
+                {cons, Line, expr_to_beam(Value3, Line), {nil, Line}}}}]};
         _ ->
             % Format multiple arguments with spaces between them
             % Use ~p for all arguments for consistency
@@ -205,6 +223,11 @@ expr_to_beam({call, print, Args}, Line) ->
 expr_to_beam({call, println, Args}, Line) ->
     % Special handling for println calls (print with newline)
     case Args of
+        [] ->
+            % No arguments, just print a newline
+            {call, Line,
+             {remote, Line, {atom, Line, io}, {atom, Line, format}},
+             [{string, Line, "~n"}, {nil, Line}]};
         [Value] ->
             case Value of
                 Value when is_list(Value) ->
@@ -218,6 +241,21 @@ expr_to_beam({call, println, Args}, Line) ->
                      {remote, Line, {atom, Line, io}, {atom, Line, format}},
                      [{string, Line, "~p~n"}, {cons, Line, expr_to_beam(Value, Line), {nil, Line}}]}
             end;
+        [Value1, Value2] ->
+            % Format two arguments with a space between them
+            {call, Line,
+             {remote, Line, {atom, Line, io}, {atom, Line, format}},
+             [{string, Line, "~p ~p~n"}, 
+              {cons, Line, expr_to_beam(Value1, Line),
+               {cons, Line, expr_to_beam(Value2, Line), {nil, Line}}}]};
+        [Value1, Value2, Value3] ->
+            % Format three arguments with spaces between them
+            {call, Line,
+             {remote, Line, {atom, Line, io}, {atom, Line, format}},
+             [{string, Line, "~p ~p ~p~n"}, 
+              {cons, Line, expr_to_beam(Value1, Line),
+               {cons, Line, expr_to_beam(Value2, Line),
+                {cons, Line, expr_to_beam(Value3, Line), {nil, Line}}}}]};
         _ ->
             % Format multiple arguments with spaces between them
             % Use ~p for all arguments for consistency
@@ -274,6 +312,12 @@ expr_to_beam(Value, Line) when is_float(Value) ->
 
 expr_to_beam(Value, Line) when is_list(Value) ->
     {string, Line, process_string_escapes(Value)};
+
+expr_to_beam(true, Line) ->
+    {atom, Line, true};
+
+expr_to_beam(false, Line) ->
+    {atom, Line, false};
 
 expr_to_beam(Value, Line) when is_atom(Value) ->
     {var, Line, Value};

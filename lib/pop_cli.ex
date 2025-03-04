@@ -17,7 +17,7 @@ defmodule PopCli do
   Main entry point for the CLI.
   """
   def main(args) do
-    IO.puts("\n#{@cyan}#{@bold}Pop Language#{@reset} #{@magenta}v0.5.0#{@reset}\n")
+    IO.puts("\n#{@cyan}#{@bold}Pop Language#{@reset} #{@magenta}v0.5.1#{@reset}\n")
 
     args
     |> parse_args()
@@ -149,7 +149,7 @@ defmodule PopCli do
   """
   def print_version do
     IO.puts("""
-    #{@cyan}#{@bold}#{@underline}Pop Language Compiler#{@reset} #{@green}v0.5.0#{@reset}
+    #{@cyan}#{@bold}#{@underline}Pop Language Compiler#{@reset} #{@green}v0.5.1#{@reset}
 
     #{@bold}Created by:#{@reset} Thoq
     #{@bold}License:#{@reset} MIT

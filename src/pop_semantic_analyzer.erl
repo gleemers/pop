@@ -19,8 +19,12 @@ analyze(AST) ->
 init_environment() ->
     BuiltIns = [
         {print, 1},
+        {print, 2},
+        {print, 3},
+        {println, 0},
         {println, 1},
         {println, 2},
+        {println, 3},
         {io_format, 1},
         {io_format, 2},
         {io_format, 3}
@@ -127,16 +131,24 @@ analyze_expression({call, Name, Args}, Env, Errors, Warnings) ->
             {Env, Errors ++ [FuncError], Warnings}
     end;
 analyze_expression(Value, Env, Errors, Warnings) when is_atom(Value) ->
-    % Check if variable is defined
-    case is_variable_defined(Value, Env) of
+    % Check if it's a boolean literal
+    case Value of
         true ->
-            % Mark variable as used
-            NewEnv = mark_variable_used(Value, Env),
-            {NewEnv, Errors, Warnings};
+            {Env, Errors, Warnings};
         false ->
-            % Variable not defined, add error
-            VarError = {error, {undefined_variable, Value}},
-            {Env, Errors ++ [VarError], Warnings}
+            {Env, Errors, Warnings};
+        _ ->
+            % Check if variable is defined
+            case is_variable_defined(Value, Env) of
+                true ->
+                    % Mark variable as used
+                    NewEnv = mark_variable_used(Value, Env),
+                    {NewEnv, Errors, Warnings};
+                false ->
+                    % Variable not defined, add error
+                    VarError = {error, {undefined_variable, Value}},
+                    {Env, Errors ++ [VarError], Warnings}
+            end
     end;
 analyze_expression(_Value, Env, Errors, Warnings) ->
     % Literals (integers, floats, strings, etc.) are always valid
