@@ -133,7 +133,7 @@ defmodule PopCli do
   Print version information.
   """
   def print_version do
-    IO.puts("Pop Language Compiler v0.1.0")
+    IO.puts("Pop Language Compiler v0.2.0")
   end
 
   @doc """
