@@ -4,6 +4,8 @@ D = [0-9]
 L = [a-zA-Z_]
 WS = [\s\t\n\r]
 COMMENT = \/\/[^\n]*
+DOC_COMMENT = \/\*\*[\s\S]*?\*\/
+MODULE_COMMENT = \/\*\*[\s\S]*?\*\/
 
 Rules.
 
@@ -17,6 +19,7 @@ Rules.
 \%                     : {token, {'%', TokenLine}}.
 =                      : {token, {'=', TokenLine}}.
 ==                     : {token, {'==', TokenLine}}.
+!=                     : {token, {'!=', TokenLine}}.
 >                      : {token, {'>', TokenLine}}.
 <                      : {token, {'<', TokenLine}}.
 >=                     : {token, {'>=', TokenLine}}.
@@ -35,6 +38,8 @@ true                   : {token, {boolean, TokenLine, true}}.
 false                  : {token, {boolean, TokenLine, false}}.
 {L}+                   : {token, {identifier, TokenLine, list_to_atom(TokenChars)}}.
 {COMMENT}              : skip_token.
+{DOC_COMMENT}          : skip_token.
+{MODULE_COMMENT}       : skip_token.
 {WS}+                  : skip_token.
 
 Erlang code.

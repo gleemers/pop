@@ -8,7 +8,7 @@ Pop is a simple functional programming language that compiles to BEAM (Erlang Vi
 
 - Function definitions with parameters
 - Basic arithmetic operations (+, -, *, /)
-- Comparison operators (==, >, <, >=, <=)
+- Comparison operators (==, !=, >, <, >=, <=)
 - Variable assignments
 - If-else statements
 - Return statements for explicit control flow
@@ -226,6 +226,26 @@ fun fibonacci_helper(n, a, b) {
 
 fun main() {
     println("fibonacci(20) =", fibonacci_tail(20));
+}
+```
+
+### Comparison Operators
+
+```
+fun main() {
+    // Equal comparison
+    io_format("5 == 5 is ~p\n", 5 == 5);  // true
+    io_format("5 == 3 is ~p\n", 5 == 3);  // false
+    
+    // Not equal comparison
+    io_format("5 != 3 is ~p\n", 5 != 3);  // true
+    io_format("5 != 5 is ~p\n", 5 != 5);  // false
+    
+    // Greater than
+    io_format("5 > 3 is ~p\n", 5 > 3);    // true
+    
+    // Less than
+    io_format("5 < 10 is ~p\n", 5 < 10);  // true
 }
 ```
 

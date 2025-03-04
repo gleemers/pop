@@ -1,0 +1,20 @@
+// Example demonstrating the != (not equal) operator
+
+// Function to check if two values are not equal
+fun are_not_equal(a, b) {
+    return a != b;
+}
+
+fun main() {
+    // Test with integers
+    println("5 != 3 is", are_not_equal(5, 3));  // true
+    println("5 != 5 is", are_not_equal(5, 5));  // false
+    
+    // Direct usage of != operator
+    println("10 != 10 is", 10 != 10);  // false
+    println("10 != 20 is", 10 != 20);  // true
+    
+    // Test with negative numbers
+    println("-5 != 5 is", -5 != 5);    // true
+    println("-5 != -5 is", -5 != -5);  // false
+}

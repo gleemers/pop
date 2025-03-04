@@ -14,7 +14,7 @@ Nonterminals
 
 Terminals
     integer float string boolean
-    '+' '-' '*' '/' '%' '=' '=='
+    '+' '-' '*' '/' '%' '=' '==' '!='
     '>' '<' '>=' '<='
     '(' ')' '{' '}' ';' ','
     fun_kw if_kw else_kw return_kw
@@ -50,6 +50,7 @@ expression -> expression '*' expression : {op, '*', '$1', '$3'}.
 expression -> expression '/' expression : {op, '/', '$1', '$3'}.
 expression -> expression '%' expression : {op, '%', '$1', '$3'}.
 expression -> expression '==' expression : {op, '==', '$1', '$3'}.
+expression -> expression '!=' expression : {op, '!=', '$1', '$3'}.
 expression -> expression '>' expression : {op, '>', '$1', '$3'}.
 expression -> expression '<' expression : {op, '<', '$1', '$3'}.
 expression -> expression '>=' expression : {op, '>=', '$1', '$3'}.

@@ -109,7 +109,6 @@ expr_to_beam({op, '/', Left, Right}) ->
     {op, 1, '/',
      expr_to_beam(Left),
      expr_to_beam(Right)};
-
 expr_to_beam({op, '%', Left, Right}) ->
     {op, 1, 'rem',
      expr_to_beam(Left),
@@ -117,6 +116,11 @@ expr_to_beam({op, '%', Left, Right}) ->
 
 expr_to_beam({op, '==', Left, Right}) ->
     {op, 1, '==',
+     expr_to_beam(Left),
+     expr_to_beam(Right)};
+
+expr_to_beam({op, '!=', Left, Right}) ->
+    {op, 1, '/=',
      expr_to_beam(Left),
      expr_to_beam(Right)};
 
