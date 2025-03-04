@@ -1,0 +1,20 @@
+fun main() {
+    println("Testing print and println functions:");
+    
+    a = 42;
+    b = "Hello, World!";
+    
+    print("Value of a: ");
+    println(a);
+    
+    print("Value of b: ");
+    println(b);
+    
+    println();
+    
+    println("Arithmetic: 5 + 3 = ", 5 + 3);
+    
+    is_even = a % 2 == 0;
+    print("Is a even? ");
+    println(is_even);
+}

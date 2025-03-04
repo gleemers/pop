@@ -13,6 +13,8 @@ Pop is a simple functional programming language that compiles to BEAM (Erlang Vi
 - If-else statements
 - Return statements for explicit control flow
 - String literals
+- Boolean literals (true, false)
+- Print and println functions for easy output
 - Function calls
 - Recursive approach by default
 - Elixir-powered CLI interface
@@ -104,14 +106,33 @@ fun early_return(n) {
 ```
 fun check_value(x) {
     if (x == 0) {
-        io_format("Value is zero\n");
+        println("Value is zero");
     } else {
         if (x > 0) {
-            io_format("Value is positive\n");
+            println("Value is positive");
         } else {
-            io_format("Value is negative\n");
+            println("Value is negative");
         }
     }
+}
+```
+
+### Print and Println Functions
+
+```
+fun main() {
+    println("Hello, World!");  // Prints with a newline
+    
+    print("Enter your name: "); // Prints without a newline
+    
+    a = 42;
+    println("The answer is", a);
+    
+    println(); // Just prints a newline
+    
+    is_even = a % 2 == 0;
+    print("Is a even? ");
+    println(is_even);
 }
 ```
 
@@ -128,7 +149,7 @@ fun fibonacci(n) {
 }
 
 fun main() {
-    io_format("fibonacci(7) = ~p\n", fibonacci(7));
+    println("fibonacci(7) =", fibonacci(7));
 }
 ```
 
@@ -147,21 +168,21 @@ fun fibonacci(n) {
 fun print_fibonacci_sequence(n, limit) {
     if (n == 0) {
         result = fibonacci(n);
-        io_format("fibonacci(~p) = ~p\n", n, result);
+        println("fibonacci(", n, ") =", result);
         print_fibonacci_sequence(n + 1, limit);
     } else {
         result = fibonacci(n);
         if (result <= limit) {
-            io_format("fibonacci(~p) = ~p\n", n, result);
+            println("fibonacci(", n, ") =", result);
             print_fibonacci_sequence(n + 1, limit);
         } else {
-            io_format("Reached limit: ~p\n", limit);
+            println("Reached limit:", limit);
         }
     }
 }
 
 fun main() {
-    io_format("Fibonacci sequence up to 100:\n");
+    println("Fibonacci sequence up to 100:");
     print_fibonacci_sequence(0, 100);
 }
 ```
@@ -181,7 +202,7 @@ fun fibonacci_helper(n, a, b) {
 }
 
 fun main() {
-    io_format("fibonacci(20) = ~p\n", fibonacci_tail(20));
+    println("fibonacci(20) =", fibonacci_tail(20));
 }
 ```
 

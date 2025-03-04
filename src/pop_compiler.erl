@@ -84,9 +84,9 @@ statements_to_beam({if_else_stmt, Condition, ThenBlock, ElseBlock}) ->
      [{clause, 1, [{atom, 1, true}], [], [statements_to_beam(S) || S <- ThenBlock]},
       {clause, 1, [{var, 1, '_'}], [], [statements_to_beam(S) || S <- ElseBlock]}]};
 statements_to_beam({return_stmt, nil}) ->
-    {atom, 1, ok};
+    {return, 1};
 statements_to_beam({return_stmt, Value}) ->
-    expr_to_beam(Value);
+    {return, 1, expr_to_beam(Value)};
 statements_to_beam(Other) ->
     expr_to_beam(Other).
 
@@ -145,6 +145,61 @@ expr_to_beam({assign, Name, Value}) ->
      {var, 1, Name},
      expr_to_beam(Value)};
 
+expr_to_beam({call, print, Args}) ->
+    % Special handling for print calls
+    case Args of
+        [Value] ->
+            case Value of
+                Value when is_list(Value) ->
+                    % If it's a string, use ~s to avoid quotes
+                    {call, 1,
+                     {remote, 1, {atom, 1, io}, {atom, 1, format}},
+                     [{string, 1, "~s"}, {cons, 1, expr_to_beam(Value), {nil, 1}}]};
+                _ ->
+                    % Otherwise use ~p
+                    {call, 1,
+                     {remote, 1, {atom, 1, io}, {atom, 1, format}},
+                     [{string, 1, "~p"}, {cons, 1, expr_to_beam(Value), {nil, 1}}]}
+            end;
+        _ ->
+            % Format multiple arguments with spaces between them
+            % Use ~p for all arguments for consistency
+            Format = string:join(lists:duplicate(length(Args), "~p"), " "),
+            {call, 1,
+             {remote, 1, {atom, 1, io}, {atom, 1, format}},
+             [{string, 1, Format}, {cons, 1, expr_to_beam(hd(Args)), format_args_tail(tl(Args))}]}
+    end;
+
+expr_to_beam({call, println, Args}) ->
+    % Special handling for println calls
+    case Args of
+        [Value] ->
+            case Value of
+                Value when is_list(Value) ->
+                    % If it's a string, use ~s to avoid quotes
+                    {call, 1,
+                     {remote, 1, {atom, 1, io}, {atom, 1, format}},
+                     [{string, 1, "~s\n"}, {cons, 1, expr_to_beam(Value), {nil, 1}}]};
+                _ ->
+                    % Otherwise use ~p
+                    {call, 1,
+                     {remote, 1, {atom, 1, io}, {atom, 1, format}},
+                     [{string, 1, "~p\n"}, {cons, 1, expr_to_beam(Value), {nil, 1}}]}
+            end;
+        [] ->
+            % Just print a newline
+            {call, 1,
+             {remote, 1, {atom, 1, io}, {atom, 1, format}},
+             [{string, 1, "\n"}, {nil, 1}]};
+        _ ->
+            % Format multiple arguments with spaces between them
+            % Use ~p for all arguments for consistency
+            Format = string:join(lists:duplicate(length(Args), "~p"), " ") ++ "\n",
+            {call, 1,
+             {remote, 1, {atom, 1, io}, {atom, 1, format}},
+             [{string, 1, Format}, {cons, 1, expr_to_beam(hd(Args)), format_args_tail(tl(Args))}]}
+    end;
+
 expr_to_beam({call, io_format, Args}) ->
     % Special handling for io:format calls
     case Args of
@@ -194,11 +249,7 @@ expr_to_beam(Value) when is_list(Value) ->
     {string, 1, process_string_escapes(Value)};
 
 expr_to_beam(Value) when is_atom(Value) ->
-    case Value of
-        true -> {atom, 1, true};
-        false -> {atom, 1, false};
-        _ -> {var, 1, Value}
-    end;
+    {var, 1, Value};
 
 expr_to_beam(nil) ->
     {atom, 1, undefined}.
@@ -231,3 +282,9 @@ process_string_escapes([$\\, $" | Rest], Acc) ->
     process_string_escapes(Rest, [$" | Acc]);
 process_string_escapes([C | Rest], Acc) ->
     process_string_escapes(Rest, [C | Acc]).
+
+% Helper function to format the tail of arguments
+format_args_tail([]) ->
+    {nil, 1};
+format_args_tail([Arg | Rest]) ->
+    {cons, 1, expr_to_beam(Arg), format_args_tail(Rest)}.

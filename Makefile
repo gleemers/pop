@@ -29,6 +29,7 @@ test: build $(EXAMPLES_DIR)
 	./pop examples/fibonacci_sequence.pop
 	./pop examples/tail_recursive_fibonacci.pop
 	./pop examples/return_example.pop
+	./pop examples/print_example.pop
 
 compile_examples: build $(EXAMPLES_DIR)
 	./pop compile examples/hello.pop
@@ -39,6 +40,7 @@ compile_examples: build $(EXAMPLES_DIR)
 	./pop compile examples/fibonacci_sequence.pop
 	./pop compile examples/tail_recursive_fibonacci.pop
 	./pop compile examples/return_example.pop
+	./pop compile examples/print_example.pop
 
 install: build
 	cp pop /usr/local/bin/
