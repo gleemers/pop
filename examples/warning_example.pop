@@ -1,0 +1,38 @@
+// Example with warnings to test warning reporting
+
+fun constant_condition() {
+    // This condition is always true
+    if (5 == 5) {
+        println("This will always execute");
+    }
+    
+    // This condition is always false
+    if (4 == 5) {
+        println("This will never execute");
+    }
+    
+    // This is fine
+    x = 5;
+    if (x == 5) {
+        println("This is a valid condition");
+    }
+}
+
+fun unused_variables() {
+    // Unused variable
+    unused = 10;
+    
+    // Used variable
+    used = 20;
+    println("The value is:", used);
+    
+    // Another unused variable
+    another_unused = 30;
+}
+
+fun main() {
+    constant_condition();
+    unused_variables();
+    
+    println("Warning example completed");
+} 

@@ -7,6 +7,6 @@ defmodule Pop do
   Version of the Pop language.
   """
   def version do
-    "0.4.0"
+    "0.5.0"
   end
 end

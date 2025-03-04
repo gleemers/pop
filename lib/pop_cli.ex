@@ -17,7 +17,7 @@ defmodule PopCli do
   Main entry point for the CLI.
   """
   def main(args) do
-    IO.puts("\n#{@cyan}#{@bold}Pop Language#{@reset} #{@magenta}v0.4.0#{@reset}\n")
+    IO.puts("\n#{@cyan}#{@bold}Pop Language#{@reset} #{@magenta}v0.5.0#{@reset}\n")
 
     args
     |> parse_args()
@@ -149,9 +149,9 @@ defmodule PopCli do
   """
   def print_version do
     IO.puts("""
-    #{@cyan}#{@bold}#{@underline}Pop Language Compiler#{@reset} #{@green}v0.4.0#{@reset}
+    #{@cyan}#{@bold}#{@underline}Pop Language Compiler#{@reset} #{@green}v0.5.0#{@reset}
 
-    #{@bold}Created by:#{@reset} Pop Language Team
+    #{@bold}Created by:#{@reset} Thoq
     #{@bold}License:#{@reset} MIT
 
     A simple functional programming language that compiles to BEAM bytecode.
@@ -170,13 +170,20 @@ defmodule PopCli do
             {:ok, module} ->
               IO.puts(PopErrorFormatter.format_success("Compilation successful: #{filename}"))
               {:ok, module}
+            {:ok, module, warnings} ->
+              # Compilation successful but with warnings
+              IO.puts(PopErrorFormatter.format_success("Compilation successful: #{filename}"))
+              if warnings && !Enum.empty?(warnings) do
+                IO.puts(PopErrorReporter.format_warnings(warnings, filename))
+              end
+              {:ok, module}
             error = {:error, {_line, :pop_lexer, {:illegal, _token}}, _} ->
               IO.puts(PopErrorReporter.enhance_error(error, filename))
               error
             error = {:error, {_line, :pop_parser, _}} ->
               IO.puts(PopErrorReporter.enhance_error(error, filename))
               error
-            error = {:error, errors, _} when is_list(errors) ->
+            error = {:error, errors, warnings} when is_list(errors) ->
               IO.puts(PopErrorReporter.enhance_error(error, filename))
               error
             error = {:error, reason} ->
