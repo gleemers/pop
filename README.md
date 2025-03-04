@@ -137,6 +137,28 @@ fun main() {
 }
 ```
 
+### Comments
+
+```
+// This is a single-line comment at the beginning of the file
+
+fun calculate(n) {
+    // This is a comment inside a function
+    result = n * 2; // This is an end-of-line comment
+    return result;
+}
+
+fun main() {
+    // Comments can be used to explain code
+    value = 42;
+    
+    // Or to temporarily disable code
+    // println("This line won't be executed");
+    
+    println("Result:", calculate(value));
+}
+```
+
 ### Recursive Fibonacci Example
 
 ```
