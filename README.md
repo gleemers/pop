@@ -15,6 +15,7 @@ Pop is a simple functional programming language that compiles to BEAM (Erlang Vi
 - String literals
 - Boolean literals (true, false)
 - Print and println functions for easy output
+- Single-line comments with //
 - Function calls
 - Recursive approach by default
 - Elixir-powered CLI interface
