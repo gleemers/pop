@@ -1,0 +1,29 @@
+// This is a comment at the beginning of the file
+fun main() {
+    // This is a comment inside a function
+    println("Testing comments:");
+    
+    // Variable declarations
+    a = 42; // This is an end-of-line comment
+    
+    // Print the value
+    println("Value of a:", a);
+    
+    // Conditional statement with comments
+    if (a % 2 == 0) { // Check if a is even
+        println("a is even"); // Print result
+    } else {
+        // This branch is not taken in this example
+        println("a is odd");
+    }
+    
+    // Function call
+    result = calculate(a); // Call the calculate function
+    println("Result:", result);
+}
+
+// Helper function
+fun calculate(n) {
+    // Simple calculation
+    return n * 2; // Return double the input
+}

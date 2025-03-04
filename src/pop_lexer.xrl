@@ -3,6 +3,7 @@ Definitions.
 D = [0-9]
 L = [a-zA-Z_]
 WS = [\s\t\n\r]
+COMMENT = \/\/[^\n]*
 
 Rules.
 
@@ -33,6 +34,7 @@ return                 : {token, {return_kw, TokenLine}}.
 true                   : {token, {boolean, TokenLine, true}}.
 false                  : {token, {boolean, TokenLine, false}}.
 {L}+                   : {token, {identifier, TokenLine, list_to_atom(TokenChars)}}.
+{COMMENT}              : skip_token.
 {WS}+                  : skip_token.
 
 Erlang code.

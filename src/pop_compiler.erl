@@ -84,9 +84,9 @@ statements_to_beam({if_else_stmt, Condition, ThenBlock, ElseBlock}) ->
      [{clause, 1, [{atom, 1, true}], [], [statements_to_beam(S) || S <- ThenBlock]},
       {clause, 1, [{var, 1, '_'}], [], [statements_to_beam(S) || S <- ElseBlock]}]};
 statements_to_beam({return_stmt, nil}) ->
-    {return, 1};
+    {atom, 1, ok};
 statements_to_beam({return_stmt, Value}) ->
-    {return, 1, expr_to_beam(Value)};
+    expr_to_beam(Value);
 statements_to_beam(Other) ->
     expr_to_beam(Other).
 
