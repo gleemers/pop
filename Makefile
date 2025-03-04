@@ -1,6 +1,6 @@
 EXAMPLES_DIR = examples
 
-.PHONY: all clean test install compile_examples help
+.PHONY: all clean test install compile_examples help test_errors
 
 all: build
 
@@ -28,6 +28,11 @@ test: build $(EXAMPLES_DIR)
 	./pop examples/print_example.pop
 	./pop examples/comment_example.pop
 	./pop examples/not_equal_example.pop
+	./pop examples/colorful_example.pop
+
+test_errors: build $(EXAMPLES_DIR)
+	@echo "Testing error reporting..."
+	-./pop examples/error_example.pop
 
 compile_examples: build $(EXAMPLES_DIR)
 	./pop compile examples/hello.pop
@@ -37,6 +42,7 @@ compile_examples: build $(EXAMPLES_DIR)
 	./pop compile examples/print_example.pop
 	./pop compile examples/comment_example.pop
 	./pop compile examples/not_equal_example.pop
+	./pop compile examples/colorful_example.pop
 
 install: build
 	cp pop /usr/local/bin/
@@ -46,6 +52,7 @@ help:
 	@echo "---------------------"
 	@echo "make              - Build the Pop compiler"
 	@echo "make test         - Run test examples"
+	@echo "make test_errors  - Test error reporting"
 	@echo "make compile_examples - Compile example files"
 	@echo "make clean        - Clean build artifacts"
 	@echo "make install      - Install Pop compiler globally"

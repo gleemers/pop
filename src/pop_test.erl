@@ -16,7 +16,8 @@ test() ->
             }
         }
     ",
-    case pop_compiler:compile(Source) of
+    Result = pop_compiler:compile(Source),
+    case Result of
         {ok, Module} ->
             io:format("Compilation successful!~n"),
             Module:main();

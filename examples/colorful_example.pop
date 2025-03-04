@@ -1,0 +1,37 @@
+// Example demonstrating colorful output in the Pop language
+
+fun greet(name) {
+    println("Hello, ", name, "!");
+    println("Welcome to the Pop language!");
+}
+
+fun show_colors() {
+    println("This is a demonstration of the Pop language's colorful CLI.");
+    println("The CLI now has:");
+    println("- Colorful error messages");
+    println("- Helpful suggestions");
+    println("- Better formatting");
+    println("- Improved user experience");
+}
+
+fun main() {
+    greet("User");
+    println();
+    show_colors();
+    
+    // Print some values to show formatting
+    println();
+    println("Some values:");
+    println("5 + 3 =", 5 + 3);
+    println("10 - 4 =", 10 - 4);
+    println("3 * 7 =", 3 * 7);
+    println("20 / 5 =", 20 / 5);
+    
+    // Show comparison operators
+    println();
+    println("Comparison results:");
+    println("5 == 5 is", 5 == 5);
+    println("5 != 3 is", 5 != 3);
+    println("10 > 5 is", 10 > 5);
+    println("2 < 7 is", 2 < 7);
+} 

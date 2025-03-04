@@ -16,8 +16,9 @@ main([]) ->
     usage();
 
 main(["compile", Filename]) ->
-    case compile_file(Filename) of
-        ok ->
+    Result = compile_file(Filename),
+    case Result of
+        {ok, _Module} ->
             io:format("Compilation successful: ~p~n", [Filename]);
         {error, Reason} ->
             io:format("Compilation failed: ~p~n", [Reason]),
@@ -30,8 +31,9 @@ main(["run", Filename]) ->
 
 main([Filename]) ->
     % Compile and run in one step
-    case compile_file(Filename) of
-        ok ->
+    Result = compile_file(Filename),
+    case Result of
+        {ok, _Module} ->
             % Run the compiled module
             ModuleName = pop_module,
             try
@@ -52,9 +54,5 @@ main(_) ->
 
 % Helper function to compile a file
 compile_file(Filename) ->
-    case pop_compiler:compile_file(Filename) of
-        {ok, _Module} ->
-            ok;
-        Error ->
-            Error
-    end.
+    Result = pop_compiler:compile_file(Filename),
+    Result.

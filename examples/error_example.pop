@@ -1,0 +1,33 @@
+// Example with various errors to test error reporting
+
+fun missing_semicolon() {
+    x = 5
+    return x
+}
+
+fun undefined_variable() {
+    return y; // y is not defined
+}
+
+fun syntax_error() {
+    if (x == 5) {
+        return true
+    } else {
+        return false
+    // Missing closing brace
+}
+
+fun main() {
+    // Call to undefined function
+    result = nonexistent_function(10);
+    
+    // Missing parenthesis
+    if (5 > 3 {
+        println("This will not compile");
+    }
+    
+    // Illegal character
+    value = 5 @ 10;
+    
+    println("This code has errors");
+}

@@ -3,10 +3,22 @@ defmodule PopCli do
   CLI interface for the Pop language.
   """
 
+  # ANSI color codes for general CLI output
+  @green IO.ANSI.green()
+  @cyan IO.ANSI.cyan()
+  @yellow IO.ANSI.yellow()
+  @blue IO.ANSI.blue()
+  @magenta IO.ANSI.magenta()
+  @reset IO.ANSI.reset()
+  @bold IO.ANSI.bright()
+  @underline IO.ANSI.underline()
+
   @doc """
   Main entry point for the CLI.
   """
   def main(args) do
+    IO.puts("\n#{@cyan}#{@bold}Pop Language#{@reset} #{@magenta}v0.4.0#{@reset}\n")
+
     args
     |> parse_args()
     |> process()
@@ -45,6 +57,7 @@ defmodule PopCli do
     if opts[:help] do
       print_compile_help()
     else
+      IO.puts("#{@cyan}#{@bold}Compiling:#{@reset} #{@blue}#{filename}#{@reset}\n")
       compile_file(filename)
     end
   end
@@ -53,16 +66,18 @@ defmodule PopCli do
     if opts[:help] do
       print_run_help()
     else
+      IO.puts("#{@cyan}#{@bold}Running:#{@reset} #{@blue}#{filename}#{@reset}\n")
       run_file(filename)
     end
   end
 
   def process({_opts, [filename]}) do
+    IO.puts("#{@cyan}#{@bold}Compiling and running:#{@reset} #{@blue}#{filename}#{@reset}\n")
     compile_and_run_file(filename)
   end
 
   def process({_opts, _}) do
-    IO.puts("Invalid command")
+    IO.puts(PopErrorFormatter.format_error("Invalid command"))
     print_help()
   end
 
@@ -71,25 +86,25 @@ defmodule PopCli do
   """
   def print_help do
     IO.puts("""
-    Pop Language Compiler
+    #{@cyan}#{@bold}#{@underline}Pop Language Compiler#{@reset}
 
-    Usage:
+    #{@bold}Usage:#{@reset}
       pop [options] <command> [arguments]
 
-    Commands:
-      compile <filename>  Compile a Pop source file
-      run <filename>      Run a compiled Pop file
+    #{@bold}#{@yellow}Commands:#{@reset}
+      #{@green}compile#{@reset} <filename>  Compile a Pop source file
+      #{@green}run#{@reset} <filename>      Run a compiled Pop file
       <filename>          Compile and run a Pop file
 
-    Options:
-      -h, --help          Show this help message
-      -v, --version       Show version information
+    #{@bold}#{@yellow}Options:#{@reset}
+      #{@blue}-h, --help#{@reset}          Show this help message
+      #{@blue}-v, --version#{@reset}       Show version information
 
-    Examples:
-      pop examples/hello.pop
-      pop compile examples/factorial.pop
-      pop run examples/factorial.pop
-      pop --help
+    #{@bold}#{@yellow}Examples:#{@reset}
+      #{@magenta}pop examples/hello.pop#{@reset}
+      #{@magenta}pop compile examples/factorial.pop#{@reset}
+      #{@magenta}pop run examples/factorial.pop#{@reset}
+      #{@magenta}pop --help#{@reset}
     """)
   end
 
@@ -98,16 +113,16 @@ defmodule PopCli do
   """
   def print_compile_help do
     IO.puts("""
-    Pop Language Compiler - Compile Command
+    #{@cyan}#{@bold}#{@underline}Pop Language Compiler - Compile Command#{@reset}
 
-    Usage:
+    #{@bold}Usage:#{@reset}
       pop compile <filename>
 
-    Description:
+    #{@bold}Description:#{@reset}
       Compiles a Pop source file to BEAM bytecode.
 
-    Examples:
-      pop compile examples/hello.pop
+    #{@bold}#{@yellow}Examples:#{@reset}
+      #{@magenta}pop compile examples/hello.pop#{@reset}
     """)
   end
 
@@ -116,16 +131,16 @@ defmodule PopCli do
   """
   def print_run_help do
     IO.puts("""
-    Pop Language Compiler - Run Command
+    #{@cyan}#{@bold}#{@underline}Pop Language Compiler - Run Command#{@reset}
 
-    Usage:
+    #{@bold}Usage:#{@reset}
       pop run <filename>
 
-    Description:
+    #{@bold}Description:#{@reset}
       Runs a compiled Pop file.
 
-    Examples:
-      pop run examples/hello.pop
+    #{@bold}#{@yellow}Examples:#{@reset}
+      #{@magenta}pop run examples/hello.pop#{@reset}
     """)
   end
 
@@ -133,20 +148,49 @@ defmodule PopCli do
   Print version information.
   """
   def print_version do
-    IO.puts("Pop Language Compiler v0.3.0")
+    IO.puts("""
+    #{@cyan}#{@bold}#{@underline}Pop Language Compiler#{@reset} #{@green}v0.4.0#{@reset}
+
+    #{@bold}Created by:#{@reset} Pop Language Team
+    #{@bold}License:#{@reset} MIT
+
+    A simple functional programming language that compiles to BEAM bytecode.
+    """)
   end
 
   @doc """
   Compile a Pop source file.
   """
   def compile_file(filename) do
-    case :pop_compiler.compile_file(filename) do
-      {:ok, module} ->
-        IO.puts("Compilation successful: #{filename}")
-        {:ok, module}
-      {:error, reason} ->
-        IO.puts("Compilation failed: #{inspect(reason)}")
-        {:error, reason}
+    case File.exists?(filename) do
+      true ->
+        try do
+          result = :pop_compiler.compile_file(filename)
+          case result do
+            {:ok, module} ->
+              IO.puts(PopErrorFormatter.format_success("Compilation successful: #{filename}"))
+              {:ok, module}
+            error = {:error, {_line, :pop_lexer, {:illegal, _token}}, _} ->
+              IO.puts(PopErrorReporter.enhance_error(error, filename))
+              error
+            error = {:error, {_line, :pop_parser, _}} ->
+              IO.puts(PopErrorReporter.enhance_error(error, filename))
+              error
+            error = {:error, errors, _} when is_list(errors) ->
+              IO.puts(PopErrorReporter.enhance_error(error, filename))
+              error
+            error = {:error, reason} ->
+              IO.puts(PopErrorFormatter.format_error("Compilation failed: #{inspect(reason)}"))
+              error
+          end
+        rescue
+          e ->
+            IO.puts(PopErrorFormatter.format_error("Compilation error: #{inspect(e)}"))
+            {:error, e}
+        end
+      false ->
+        IO.puts(PopErrorFormatter.format_error("File not found: #{filename}"))
+        {:error, :file_not_found}
     end
   end
 
@@ -154,14 +198,18 @@ defmodule PopCli do
   Run a compiled Pop file.
   """
   def run_file(filename) do
-    case compile_file(filename) do
+    result = compile_file(filename)
+    case result do
       {:ok, module} ->
         try do
-          apply(module, :main, [])
-          :ok
+          IO.puts("\n#{@green}#{@bold}Program Output:#{@reset}\n#{@yellow}#{@bold}----------------#{@reset}")
+          result = apply(module, :main, [])
+          IO.puts("#{@yellow}#{@bold}----------------#{@reset}")
+          IO.puts("\n#{@green}#{@bold}Program completed successfully.#{@reset}")
+          result
         rescue
           e ->
-            IO.puts("Runtime error: #{inspect(e)}")
+            IO.puts(PopErrorFormatter.format_runtime_error(e))
             {:error, e}
         end
       error -> error

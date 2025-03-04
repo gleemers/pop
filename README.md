@@ -20,6 +20,7 @@ Pop is a simple functional programming language that compiles to BEAM (Erlang Vi
 - Recursive approach by default
 - Elixir-powered CLI interface
 - Compiles to BEAM bytecode
+- Colorful, Rust-like error messages with helpful suggestions
 
 ## Requirements
 
@@ -258,11 +259,38 @@ make clean
 # Run tests
 make test
 
+# Test error reporting
+make test_errors
+
 # Compile examples
 make compile_examples
 
 # Show help
 make help
+```
+
+## Error Reporting
+
+Pop features a Rust-inspired error reporting system that provides:
+
+- Colorful, easy-to-read error messages
+- Source code context around the error location
+- Helpful suggestions for fixing common errors
+- Clear indication of error type and location
+
+Example error output:
+
+```
+Error: Syntax error
+  --> examples/error_example.pop:4
+  |
+3 |     x = 5
+4 |     return x
+  |            ^ Error occurs here
+  |
+5 | }
+
+Help: Add a semicolon ';' at the end of the statement.
 ```
 
 ## Architecture
